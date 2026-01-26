@@ -6,6 +6,16 @@ bin-release/
 
 # Other files and folders
 .settings/
+/.vscode/
+/assets/
+/src/external/
+/src/include/
+/src/lib/
+/tiled/
+*.dll
+*.exe
+sdlTopdown
+
 
 # Executables
 *.swf
