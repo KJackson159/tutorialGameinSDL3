@@ -14,7 +14,12 @@ public:
     SpriteComponent() = default;
     SpriteComponent(const char *path) { setTexture(path); }
 
-    void setTexture(const char *path) { texture = TextureManager::LoadTexture(path); }
+    void setTexture(const char *path)
+    {
+        if (texture)
+            SDL_DestroyTexture(texture);
+        texture = TextureManager::LoadTexture(path);
+    }
 
     void init() override
     {

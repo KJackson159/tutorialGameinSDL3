@@ -22,7 +22,6 @@ Game::~Game() {}
 
 void Game::init(const char *title, int width, int height)
 {
-
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
         SDL_Log("Error initializing SDL: %s\n", SDL_GetError());
@@ -48,17 +47,10 @@ void Game::init(const char *title, int width, int height)
 
     isRunning = true;
     SDL_SetRenderLogicalPresentation(renderer, WINDOW_W / 4, WINDOW_H / 4, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-    // SDL_Surface* temp_surface = IMG_Load("assets/Char_Sprites/char_idle_down_anim_strip_6.png");
-    // player_texture = TextureManager::LoadTexture("./assets/Char_Sprites/char_run_right_anim_strip_6.png", renderer);//SDL_CreateTextureFromSurface(renderer, temp_surface);
-    // SDL_DestroySurface(temp_surface);
-    // player = new GameObject("./assets/Char_Sprites/char_run_right_anim_strip_6.png", 20);
-    // enemy = new GameObject("./assets/Enemies_Sprites/Pinkslime_Sprites/pinkslime_run_anim_anim_all_dir_strip_6.png", 200, 150);
     gameMap = new Map();
     player.addComponent<TransformComponent>();
     player.addComponent<SpriteComponent>("./assets/Char_Sprites/char_run_right_anim_strip_6.png");
     player.addComponent<KeyboardController>();
-    // newPlayer.addComponent<PositionComponent>();
-    // newPlayer.getComponent<PositionComponent>().setPos(100.0f, 100.0f);
 }
 
 void Game::handleEvents()
@@ -77,29 +69,19 @@ void Game::handleEvents()
 
 void Game::update(float frameStart)
 {
-    // float deltaTime = (SDL_GetTicks() - frameStart) / 1000.0f;
-    // player->Update(deltaTime);
-    // enemy->Update(-deltaTime / 2.0f);
     manager.refresh();
     manager.update();
-    // player.getComponent<TransformComponent>().position.Add(Vector2D(5, 0));
     if (player.getComponent<TransformComponent>().position.x > 60.0f)
     {
         player.getComponent<SpriteComponent>().setTexture("./assets/Enemies_Sprites/Pinkslime_Sprites/pinkslime_run_anim_anim_all_dir_strip_6.png");
     }
-    // std::cout << newPlayer.getComponent<PositionComponent>().xpos() << ", " << newPlayer.getComponent<PositionComponent>().ypos() << std::endl;
 }
 
 void Game::render()
 {
-    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     gameMap->DrawMap();
     manager.draw();
-    // Render game objects here
-    // player->Render();
-    // enemy->Render();
-    // SDL_RenderTexture(renderer, player_texture, &srcRect, &destRect);
     SDL_RenderPresent(renderer);
 }
 

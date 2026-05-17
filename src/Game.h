@@ -3,7 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-//  #include <cstdio>
+
 #define WINDOW_W 1280
 #define WINDOW_H 720
 
@@ -33,12 +33,8 @@ public:
     static SDL_Event event;
 
 private:
-    // int cnt=0, frameNum = 0;
     bool isRunning;
     SDL_Window *window;
-    // SDL_Renderer* renderer;
 };
-
-// extern int cnt, frameNum;
 
 #endif /* Game_hpp */
