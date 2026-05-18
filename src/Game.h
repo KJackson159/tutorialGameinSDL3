@@ -11,8 +11,8 @@
 #define FRAME_W 16
 #define FRAME_H 16
 
-#define PLAYERSPEED 10
-#define FPS 30
+#define PLAYERSPEED 12
+#define FPS 40
 #define FRAME_TARGET_TIME (1000 / FPS) // aka frame delay in milliseconds
 
 class Game
@@ -24,7 +24,7 @@ public:
     void init(const char *title, int width, int height);
 
     void handleEvents();
-    void update(float frameStart);
+    void update();
     void render();
     void clean();
     bool running() { return isRunning; }
