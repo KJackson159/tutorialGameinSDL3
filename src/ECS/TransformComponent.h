@@ -1,6 +1,8 @@
 #pragma once
-#include "Components.h"
 #include "./../Vector2D.h"
+#include "./../Game.h"
+#include "Components.h"
+#include <cmath>
 
 class TransformComponent : public Component
 {
@@ -17,9 +19,11 @@ public:
         velocity.x = 0.0f;
         velocity.y = 0.0f;
     }
+    
     void update() override{
-        int speed = 3;
-        if (velocity.x != 0 && velocity.y != 0) speed /= 1.414f; // Diagonal movement should be slower
+        float speed = PLAYERSPEED;
+        // Diagonal movement should be slower to maintain consistent speed in all directions
+        if (velocity.x != 0.0f && velocity.y != 0.0f) speed /= std::sqrt(2.0f);
         position.x += velocity.x * speed;
         position.y += velocity.y * speed;
     }

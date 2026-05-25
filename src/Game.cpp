@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Camera.h"
 #include "TextureManager.h"
 #include "Map.h"
 #include "ECS/Components.h"
@@ -8,6 +9,7 @@ Manager manager;
 
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event Game::event;
+Camera *Game::camera = nullptr;
 auto &player(manager.addEntity());
 
 Game::Game() {}
@@ -27,6 +29,15 @@ void Game::init(const char *title, int width, int height){
         return;
     }
 
+    iconSurface = IMG_Load("./assets/test.png");
+    if (!iconSurface){
+        SDL_Log("Failed to load icon image: %s\n", SDL_GetError());
+        isRunning = false;
+        return;
+    }
+    SDL_SetWindowIcon(window, iconSurface);
+    SDL_DestroySurface(iconSurface);
+
     renderer = SDL_CreateRenderer(window, nullptr);
     if (!renderer){
         SDL_Log("Error creating renderer: %s\n", SDL_GetError());
@@ -37,13 +48,13 @@ void Game::init(const char *title, int width, int height){
     isRunning = true;
     SDL_SetRenderLogicalPresentation(renderer, WINDOW_W/4, WINDOW_H/4, SDL_LOGICAL_PRESENTATION_LETTERBOX);
     gameMap = new Map();
+    camera = new Camera();
     player.addComponent<TransformComponent>();
     player.addComponent<SpriteComponent>();
     player.addComponent<KeyboardController>();
 }
 
 void Game::handleEvents(){
-    // SDL_Event event;
     SDL_PollEvent(&event);
     switch (event.type){
         case SDL_EVENT_QUIT: isRunning = false; break;
@@ -53,6 +64,8 @@ void Game::handleEvents(){
 
 void Game::update(){
     manager.refresh();
+    // Update camera to follow player
+    camera->update(&player.getComponent<TransformComponent>());
     manager.update();
 }
 
@@ -64,6 +77,8 @@ void Game::render(){
 }
 
 void Game::clean(){
+    delete gameMap;
+    delete camera;
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
