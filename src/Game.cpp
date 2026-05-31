@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "Camera.h"
 #include "TextureManager.h"
 #include "Map.h"
 #include "ECS/Components.h"
@@ -15,14 +14,14 @@ auto &player(manager.addEntity());
 Game::Game() {}
 Game::~Game() {}
 
-void Game::init(const char *title, int width, int height){
+void Game::init(const char *title){
     if (!SDL_Init(SDL_INIT_VIDEO)){
         SDL_Log("Error initializing SDL: %s\n", SDL_GetError());
         isRunning = false;
         return;
     }
 
-    window = SDL_CreateWindow(title, width, height, SDL_WINDOW_RESIZABLE); // SDL_CreateWindow("Lesson 1: My first window from SDL", WINDOW_W, WINDOW_H, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow(title, WINDOW_W, WINDOW_H, SDL_WINDOW_RESIZABLE); // SDL_CreateWindow("Lesson 1: My first window from SDL", WINDOW_W, WINDOW_H, SDL_WINDOW_RESIZABLE);
     if (!window){
         SDL_Log("Error creating window: %s\n", SDL_GetError());
         isRunning = false;
@@ -74,6 +73,11 @@ void Game::render(){
     gameMap->DrawMap();
     manager.draw();
     SDL_RenderPresent(renderer);
+}
+
+// cap the frame rate for consistency
+void Game::timeDelay(float frameTime){
+    if (FRAME_TARGET_TIME > frameTime) SDL_Delay(FRAME_TARGET_TIME - frameTime);
 }
 
 void Game::clean(){

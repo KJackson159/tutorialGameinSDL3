@@ -1,9 +1,6 @@
 #pragma once
-#include "./../Game.h"
-#include "./../TextureManager.h"
+#include "../TextureManager.h"
 #include "Components.h"
-#include <SDL3/SDL.h>
-#include <vector>
 
 class SpriteComponent : public Component
 {
@@ -27,6 +24,11 @@ private:
     short int prevAnimation;
 
 public:
+    SpriteComponent() = default;
+    SpriteComponent(const int pathIndex){ setTexture(pathIndex); }
+
+    ~SpriteComponent(){ SDL_DestroyTexture(texture); }
+
     void setTexture(const int pathIndex){
         if (texture) SDL_DestroyTexture(texture);
         texture = TextureManager::LoadTexture(paths.at(pathIndex));
@@ -35,8 +37,10 @@ public:
     void init() override{
         transform = &entity->getComponent<TransformComponent>();
         srcRect.x = srcRect.y = 0.0f;
-        srcRect.w = srcRect.h = 16.0f;
-        destRect.w = destRect.h = 32.0f;
+        srcRect.w = FRAME_W;
+        srcRect.h = FRAME_H;
+        destRect.w = FRAME_W * SCALE;
+        destRect.h = FRAME_H * SCALE;
         animation = 2;
         frameNum = cnt = 0;
     }

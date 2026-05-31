@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "Game.h"
 #include "ECS/Components.h"
 
 Camera::Camera()

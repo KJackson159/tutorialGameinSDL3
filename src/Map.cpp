@@ -16,7 +16,11 @@ Map::Map()
     dest.x = dest.y = 0;
 }
 
-Map::~Map() {}
+Map::~Map() { 
+    SDL_DestroyTexture(dirt); 
+    SDL_DestroyTexture(grass); 
+    SDL_DestroyTexture(water); 
+}
 
 void Map::LoadMap(int arr[MAP_ROWS][MAP_COLS]){
     for (int i = 0; i < MAP_ROWS; i++){

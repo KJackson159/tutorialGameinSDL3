@@ -3,19 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-
-#define WINDOW_W 1280
-#define WINDOW_H 720
-
-#define N_FRAMES 6
-#define FRAME_W 16
-#define FRAME_H 16
-
-#define PLAYERSPEED 3.0f
-#define FPS 40
-#define FRAME_TARGET_TIME (1000/FPS) // aka frame delay in milliseconds
-
-class Camera;
+#include "Camera.h"
 
 class Game
 {
@@ -23,11 +11,12 @@ public:
     Game();
     ~Game();
 
-    void init(const char *title, int width, int height);
+    void init(const char *title);
 
     void handleEvents();
     void update();
     void render();
+    void timeDelay(float frameTime);
     void clean();
     bool running() { return isRunning; }
 
