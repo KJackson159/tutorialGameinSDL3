@@ -4,46 +4,57 @@
 
 class SpriteComponent : public Component
 {
-private:
+protected:
     TransformComponent *transform;
     SDL_Texture *texture;
     SDL_FRect srcRect, destRect;
-    std::vector<const char*> paths = {
-    "./assets/Char_Sprites/char_idle_down_anim_strip_6.png", //Idle down 0 (Initial animation)
-    "./assets/Char_Sprites/char_idle_left_anim_strip_6.png", //Idle left 1
-    "./assets/Char_Sprites/char_idle_right_anim_strip_6.png",//Idle right 2
-    "./assets/Char_Sprites/char_idle_up_anim_strip_6.png",   //Idle up 3
-    "./assets/Char_Sprites/char_run_down_anim_strip_6.png",  //Run down 4
-    "./assets/Char_Sprites/char_run_left_anim_strip_6.png",  //Run left 5
-    "./assets/Char_Sprites/char_run_right_anim_strip_6.png", //Run right 6
-    "./assets/Char_Sprites/char_run_up_anim_strip_6.png",     //Run up 7
-    "idle diagonal up right", "idle diagonal up left", "idle diagonal down right", "idle diagonal down left", // Future diagonal animations 8-11
-    "run diagonal up right", "run diagonal up left", "run diagonal down right", "run diagonal down left" // Future diagonal animations 12-15
-    };
-    short int animation, frameNum, cnt; // 0-3 for idle animations, 4-7 for run animations
-    short int prevAnimation;
 
 public:
     SpriteComponent() = default;
-    SpriteComponent(const int pathIndex){ setTexture(pathIndex); }
+    SpriteComponent(const char* path){ setTexture(path); }
 
     ~SpriteComponent(){ SDL_DestroyTexture(texture); }
 
-    void setTexture(const int pathIndex){
+    void setTexture(const char* path){
         if (texture) SDL_DestroyTexture(texture);
-        texture = TextureManager::LoadTexture(paths.at(pathIndex));
+        texture = TextureManager::LoadTexture(path);
     }
 
     void init() override{
         transform = &entity->getComponent<TransformComponent>();
-        srcRect.x = srcRect.y = 0.0f;
-        srcRect.w = FRAME_W;
-        srcRect.h = FRAME_H;
-        destRect.w = FRAME_W * SCALE;
-        destRect.h = FRAME_H * SCALE;
-        animation = 2;
-        frameNum = cnt = 0;
+        srcRect.x = srcRect.y = 0;
+        srcRect.w = transform->width;
+        srcRect.h = transform->height;
+        destRect.x = transform->position.x;
+        destRect.y = transform->position.y;
+        destRect.w = transform->width * transform->scale;
+        destRect.h = transform->height * transform->scale;
+    }   
+
+    void update() override {
+        destRect.x = transform->position.x;
+        destRect.y = transform->position.y;
     }
+
+    void draw() override { TextureManager::Draw(texture, srcRect, destRect); }
+};
+
+
+class SpritePlayerComponent : public SpriteComponent
+{
+private:
+    std::vector<const char*> spriteSheets;
+    short int animation = 0, frameNum = 0, cnt = 0; // 0-3 for idle animations, 4-7 for run animations
+    short int prevAnimation = 0;
+
+public:
+    SpritePlayerComponent() = default;
+    SpritePlayerComponent(std::vector<const char*> sheets){
+        spriteSheets = sheets; 
+        setTexture(spriteSheets[0]);
+    }
+
+    ~SpritePlayerComponent(){ SDL_DestroyTexture(texture); }
 
     void update() override{
         const bool *pressedKey = SDL_GetKeyboardState(nullptr);
@@ -75,15 +86,13 @@ public:
                 */
                 default: break;
             }
-        } setTexture(animation);
+        } setTexture(spriteSheets[animation]);
         destRect.x = (int)transform->position.x;
         destRect.y = (int)transform->position.y;
         cnt++;
-        if (cnt >= (int)PLAYERSPEED){                                         // Change frame every 1/10th second
+        if (cnt >= (int)transform->speed){                                         // Change frame every 1/10th second
             frameNum = (frameNum + 1) % N_FRAMES; // Assuming each animation has 6 frames
             cnt = 0;
         } srcRect.x = frameNum * FRAME_W;
     }
-
-    void draw() override { TextureManager::Draw(texture, srcRect, destRect); }
 };

@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "TextureManager.h"
 #include "Map.h"
+#include "Collision.h"
 #include "ECS/Components.h"
+#include "ECS/Sprites.h"
 
 Map *gameMap;
 Manager manager;
@@ -9,7 +11,9 @@ Manager manager;
 SDL_Renderer *Game::renderer = nullptr;
 SDL_Event Game::event;
 Camera *Game::camera = nullptr;
+
 auto &player(manager.addEntity());
+auto &wall(manager.addEntity());
 
 Game::Game() {}
 Game::~Game() {}
@@ -49,8 +53,13 @@ void Game::init(const char *title){
     gameMap = new Map();
     camera = new Camera();
     player.addComponent<TransformComponent>();
-    player.addComponent<SpriteComponent>();
+    player.addComponent<SpritePlayerComponent>(playerSprites);
     player.addComponent<KeyboardController>();
+    player.addComponent<ColliderComponent>("player");
+
+    wall.addComponent<TransformComponent>(50.0f, 50.0f, 100, 20);
+    wall.addComponent<SpriteComponent>("assets/Tile_Sprites/dirt.png");
+    wall.addComponent<ColliderComponent>("wall");
 }
 
 void Game::handleEvents(){
@@ -66,6 +75,10 @@ void Game::update(){
     // Update camera to follow player
     camera->update(&player.getComponent<TransformComponent>());
     manager.update();
+    if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider)){
+        SDL_Log("Collision Detected!");
+        player.getComponent<TransformComponent>().position = Vector2D(0.0f, 0.0f); // Reset player position on collision
+    }
 }
 
 void Game::render(){
