@@ -4,8 +4,7 @@
 Camera::Camera()
     : width(WINDOW_W / 4.0f), height(WINDOW_H / 4.0f),
       deadzoneX(width * 0.25f), deadzoneY(height * 0.25f),
-      mapWidth(25 * 16), mapHeight(20 * 16)
-{
+      mapWidth(25 * 16), mapHeight(20 * 16){
     position.x = 0.0f;
     position.y = 0.0f;
 }

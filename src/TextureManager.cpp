@@ -9,8 +9,7 @@ SDL_Texture *TextureManager::LoadTexture(const char *file){
 
 void TextureManager::Draw(SDL_Texture *tex, SDL_FRect src, SDL_FRect dest){
     // Apply camera offset to destination rectangle
-    if (Game::camera)
-    {
+    if (Game::camera){
         Vector2D offset = Game::camera->getOffset();
         dest.x += offset.x;
         dest.y += offset.y;

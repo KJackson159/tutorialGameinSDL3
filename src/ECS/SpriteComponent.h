@@ -25,15 +25,15 @@ public:
         srcRect.x = srcRect.y = 0;
         srcRect.w = transform->width;
         srcRect.h = transform->height;
-        destRect.x = transform->position.x;
-        destRect.y = transform->position.y;
+        destRect.x = static_cast<int>(transform->position.x);
+        destRect.y = static_cast<int>(transform->position.y);
         destRect.w = transform->width * transform->scale;
         destRect.h = transform->height * transform->scale;
-    }   
+    }  
 
     void update() override {
-        destRect.x = transform->position.x;
-        destRect.y = transform->position.y;
+        destRect.x = static_cast<int>(transform->position.x);
+        destRect.y = static_cast<int>(transform->position.y);
     }
 
     void draw() override { TextureManager::Draw(texture, srcRect, destRect); }
@@ -87,10 +87,10 @@ public:
                 default: break;
             }
         } setTexture(spriteSheets[animation]);
-        destRect.x = (int)transform->position.x;
-        destRect.y = (int)transform->position.y;
+        destRect.x = static_cast<int>(transform->position.x);
+        destRect.y = static_cast<int>(transform->position.y);
         cnt++;
-        if (cnt >= (int)transform->speed){                                         // Change frame every 1/10th second
+        if (cnt >= static_cast<int>(transform->speed)){                                         // Change frame every 1/10th second
             frameNum = (frameNum + 1) % N_FRAMES; // Assuming each animation has 6 frames
             cnt = 0;
         } srcRect.x = frameNum * FRAME_W;

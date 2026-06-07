@@ -77,7 +77,7 @@ void Game::update(){
     manager.update();
     if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider)){
         SDL_Log("Collision Detected!");
-        player.getComponent<TransformComponent>().position = Vector2D(0.0f, 0.0f); // Reset player position on collision
+        player.getComponent<TransformComponent>().velocity * -1; // Reset player velocity on collision
     }
 }
 

@@ -27,8 +27,7 @@ public:
     }
 
     void init() override{
-        velocity.x = 0.0f;
-        velocity.y = 0.0f;
+        velocity.Zero();
     }
     
     void update() override{
