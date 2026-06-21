@@ -1,8 +1,8 @@
 #include "TextureManager.h"
 
-SDL_Texture *TextureManager::LoadTexture(const char *file){
-    SDL_Texture *texture = IMG_LoadTexture(Game::renderer, file);
-    if (!texture) SDL_Log("Failed to load texture %s: %s", file, SDL_GetError());
+SDL_Texture *TextureManager::LoadTexture(std::string file){
+    SDL_Texture *texture = IMG_LoadTexture(Game::renderer, file.c_str());
+    if (!texture) SDL_Log("Failed to load texture %s: %s", file.c_str(), SDL_GetError());
     else SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     return texture;
 }

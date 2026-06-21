@@ -3,7 +3,10 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <vector>
 #include "Camera.h"
+
+class ColliderComponent;
 
 class Game
 {
@@ -23,6 +26,7 @@ public:
     static SDL_Renderer *renderer;
     static SDL_Event event;
     static Camera *camera;
+    static std::vector<ColliderComponent*> colliders;
 
 private:
     bool isRunning;

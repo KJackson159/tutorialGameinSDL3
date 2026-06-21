@@ -11,11 +11,11 @@ protected:
 
 public:
     SpriteComponent() = default;
-    SpriteComponent(const char* path){ setTexture(path); }
+    SpriteComponent(std::string path){ setTexture(path); }
 
     ~SpriteComponent(){ SDL_DestroyTexture(texture); }
 
-    void setTexture(const char* path){
+    void setTexture(std::string path){
         if (texture) SDL_DestroyTexture(texture);
         texture = TextureManager::LoadTexture(path);
     }
@@ -43,13 +43,13 @@ public:
 class SpritePlayerComponent : public SpriteComponent
 {
 private:
-    std::vector<const char*> spriteSheets;
+    std::vector<std::string> spriteSheets;
     short int animation = 0, frameNum = 0, cnt = 0; // 0-3 for idle animations, 4-7 for run animations
     short int prevAnimation = 0;
 
 public:
     SpritePlayerComponent() = default;
-    SpritePlayerComponent(std::vector<const char*> sheets){
+    SpritePlayerComponent(std::vector<std::string> sheets){
         spriteSheets = sheets; 
         setTexture(spriteSheets[0]);
     }
@@ -72,7 +72,10 @@ public:
         if ((pressedKey[SDL_SCANCODE_S] || pressedKey[SDL_SCANCODE_DOWN]) && 
             (pressedKey[SDL_SCANCODE_A] || pressedKey[SDL_SCANCODE_LEFT])) animation = 15; // Diagonal down left
         */
-        if ((destRect.x == (int)transform->position.x) && (destRect.y == (int)transform->position.y)){
+        if (!(pressedKey[SDL_SCANCODE_W] || pressedKey[SDL_SCANCODE_UP] || 
+            pressedKey[SDL_SCANCODE_S] || pressedKey[SDL_SCANCODE_DOWN] ||
+            pressedKey[SDL_SCANCODE_A] || pressedKey[SDL_SCANCODE_LEFT] ||
+            pressedKey[SDL_SCANCODE_D] || pressedKey[SDL_SCANCODE_RIGHT])) {
              switch(animation){
                 case 4: animation = 0; break; //down to idle down
                 case 5: animation = 1; break; //left to idle left

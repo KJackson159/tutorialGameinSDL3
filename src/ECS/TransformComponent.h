@@ -8,7 +8,8 @@ class TransformComponent : public Component
 public:
     Vector2D position;
     Vector2D velocity;
-    short int width, height, scale, speed;
+    short int width, height, scale;
+    float speed;
 
     TransformComponent(
         float xpos = 0.0f, 
@@ -16,7 +17,7 @@ public:
         short int w = FRAME_W, 
         short int h = FRAME_H, 
         short int sc = SCALE,
-        short int spd = PLAYERSPEED
+        float spd = PLAYERSPEED
     ){
         position.x = xpos;
         position.y = ypos;

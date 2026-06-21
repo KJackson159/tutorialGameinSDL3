@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-std::vector<const char*> playerSprites = {
+std::vector<std::string> playerSprites = {
     "./assets/Char_Sprites/char_idle_down_anim_strip_6.png", //Idle down 0 (Initial animation)
     "./assets/Char_Sprites/char_idle_left_anim_strip_6.png", //Idle left 1
     "./assets/Char_Sprites/char_idle_right_anim_strip_6.png",//Idle right 2

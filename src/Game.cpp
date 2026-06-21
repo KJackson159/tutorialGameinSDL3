@@ -12,8 +12,14 @@ SDL_Renderer *Game::renderer = nullptr;
 SDL_Event Game::event;
 Camera *Game::camera = nullptr;
 
+std::vector<ColliderComponent*> Game::colliders;
+
 auto &player(manager.addEntity());
 auto &wall(manager.addEntity());
+
+auto &tile0(manager.addEntity());
+auto &tile1(manager.addEntity());
+auto &tile2(manager.addEntity());
 
 Game::Game() {}
 Game::~Game() {}
@@ -52,6 +58,13 @@ void Game::init(const char *title){
     SDL_SetRenderLogicalPresentation(renderer, WINDOW_W/4, WINDOW_H/4, SDL_LOGICAL_PRESENTATION_LETTERBOX);
     gameMap = new Map();
     camera = new Camera();
+
+    tile0.addComponent<TileComponent>(200, 200, FRAME_W, FRAME_H, 0);
+    tile1.addComponent<TileComponent>(250, 250, FRAME_W, FRAME_H, 1);
+    tile1.addComponent<ColliderComponent>("dirt");
+    tile2.addComponent<TileComponent>(150, 150, FRAME_W, FRAME_H, 2);
+    tile2.addComponent<ColliderComponent>("grass");
+
     player.addComponent<TransformComponent>();
     player.addComponent<SpritePlayerComponent>(playerSprites);
     player.addComponent<KeyboardController>();
@@ -72,18 +85,15 @@ void Game::handleEvents(){
 
 void Game::update(){
     manager.refresh();
-    // Update camera to follow player
-    camera->update(&player.getComponent<TransformComponent>());
+    camera->update(&player.getComponent<TransformComponent>()); //Update camera to follow player
     manager.update();
-    if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider)){
-        SDL_Log("Collision Detected!");
-        player.getComponent<TransformComponent>().velocity * -1; // Reset player velocity on collision
-    }
+
+    for (auto cc : colliders) Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
-    gameMap->DrawMap();
+    //gameMap->DrawMap();
     manager.draw();
     SDL_RenderPresent(renderer);
 }
